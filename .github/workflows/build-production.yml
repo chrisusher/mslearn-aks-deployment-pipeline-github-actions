@@ -38,23 +38,18 @@ jobs:
           username: ${{ secrets.ACR_LOGIN }}
           # Password or personal access token used to log against the Docker registry
           password: ${{ secrets.ACR_PASSWORD }}
-      
-      - name: Build and push latest production image
-        # You may pin to the exact commit or the version.
-        # uses: docker/build-push-action@e1b7f96249f2e4c8e4ac1519b9608c0d48944a1f
-        uses: docker/build-push-action@v2
-        with:
-          # Here we'll have a list of parameters
-          tags: ${{secrets.ACR_NAME}}/contoso-website:latest
-          context: .
-          push: true
 
-      - name: Build and push tagged production images
+      - name: Extract Git tags
+        run: echo "GIT_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      
+      - name: Build and push production images
+        env:
+          IMAGE_TAG: ${{ env.GIT_TAG }}
         # You may pin to the exact commit or the version.
         # uses: docker/build-push-action@e1b7f96249f2e4c8e4ac1519b9608c0d48944a1f
         uses: docker/build-push-action@v2
         with:
           # Here we'll have a list of parameters
-          tags: ${{secrets.ACR_NAME}}/contoso-website:${GITHUB_REF#refs/tags}
+          tags: ${{secrets.ACR_NAME}}/contoso-website:latest,${{secrets.ACR_NAME}}/contoso-website:$IMAGE_TAG
           context: .
           push: true
