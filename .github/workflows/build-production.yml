@@ -50,6 +50,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           # Here we'll have a list of parameters
-          tags: ${{secrets.ACR_NAME}}/contoso-website:$IMAGE_TAG
+          tags: "${{secrets.ACR_NAME}}/contoso-website:$IMAGE_TAG"
           context: .
           push: true
